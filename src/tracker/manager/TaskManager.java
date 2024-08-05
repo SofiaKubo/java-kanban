@@ -14,7 +14,7 @@ public class TaskManager {
     private Map<Integer, Epic> epics = new HashMap<>();
     private Map<Integer, Subtask> subtasks = new HashMap<>();
 
-    static int id = 1;
+    private int id = 1;
 
     private int generateNewId() {
         return id++;
@@ -72,7 +72,7 @@ public class TaskManager {
 
     // *********** методы для взаимодействия с Эпиками ***********
 
-    public void updateEpicStatus(int epicId) {
+    private void updateEpicStatus(int epicId) {
         Epic updatedEpic = epics.get(epicId);
 
         int counterNew = 0;
@@ -187,6 +187,10 @@ public class TaskManager {
             System.out.println("Эпик отсутствует");
             return;
         }
+        if (!updatedSubtask.getEpicId().equals(subtask.getEpicId())) {
+            System.out.println("Нельзя обновить подзадачу");
+            return;
+        }
         subtasks.put(subtask.getId(), subtask);
         updateEpicStatus(epic.getId());
     }
@@ -203,6 +207,10 @@ public class TaskManager {
         }
         System.out.println("Подзадачи отсутствуют");
         return null;
+    }
+
+    public Subtask getSubtaskById(int id) {
+        return subtasks.get(id);
     }
 
     public ArrayList<Subtask> getAllSubtasks() {

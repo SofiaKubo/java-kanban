@@ -16,9 +16,5 @@ public class Subtask extends Task {
     public Integer getEpicId() {
         return epicId;
     }
-
-    public void setEpicId(Integer epicId) {
-        this.epicId = epicId;
-    }
 }
 
