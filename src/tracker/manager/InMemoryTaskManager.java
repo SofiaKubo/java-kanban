@@ -7,6 +7,7 @@ import tracker.models.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -16,8 +17,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     private HistoryManager historyManager;
 
-    public InMemoryTaskManager(HistoryManager historyManager) {
-        this.historyManager = historyManager;
+    public InMemoryTaskManager() {
+        this.historyManager = Managers.getDefaultHistory();
     }
 
     private int id = 1;
@@ -261,8 +262,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public HistoryManager getHistoryManager() {
-        return historyManager;
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
     }
 }
-

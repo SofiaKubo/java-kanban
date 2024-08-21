@@ -47,7 +47,7 @@ public class Main {
         System.out.println(taskManager.getAllEpics());
 
         printAllTasks(taskManager);
-        taskManager.getHistoryManager();
+        taskManager.getHistory();
     }
 
     public static void printAllTasks(TaskManager manager) {
@@ -69,7 +69,7 @@ public class Main {
         }
 
         System.out.println("История:");
-        for (Task task : manager.getHistoryManager().getHistory()) {
+        for (Task task : manager.getHistory()) {
             System.out.println(task);
         }
     }
