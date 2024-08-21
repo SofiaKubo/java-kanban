@@ -1,18 +1,17 @@
-import org.w3c.dom.ls.LSOutput;
+import tracker.manager.Managers;
 import tracker.manager.TaskManager;
 import tracker.models.Epic;
-import tracker.models.Subtask;
 import tracker.models.Status;
+import tracker.models.Subtask;
 import tracker.models.Task;
 
 public class Main {
 
     public static void main(String[] args) {
-
         System.out.println("Поехали!");
-        TaskManager taskManager = new TaskManager();
-        Task taskOne = taskManager.addNewTask(new Task("Задача 1", "Помыть пол во всех комнатах"));
 
+        TaskManager taskManager = Managers.getDefault();
+        Task taskOne = taskManager.addNewTask(new Task("Задача 1", "Помыть пол во всех комнатах"));
         Task taskTwo = taskManager.addNewTask(new Task("Задача 2", "Купить продукты к ужину"));
 
         Epic epicOne = taskManager.addNewEpic(new Epic("Эпик 1", "Переезд"));
@@ -46,5 +45,34 @@ public class Main {
 
         taskManager.deleteEpicById(epicTwo.getId());
         System.out.println(taskManager.getAllEpics());
+
+        printAllTasks(taskManager);
+        taskManager.getHistoryManager();
+    }
+
+    public static void printAllTasks(TaskManager manager) {
+        System.out.println("Задачи:");
+        for (Task task : manager.getAllTasks()) {
+            System.out.println(task);
+        }
+        System.out.println("Эпики:");
+        for (Epic epic : manager.getAllEpics()) {
+            System.out.println(epic);
+
+            for (Subtask subtask : manager.getSubtasksOfEpic(epic.getId())) {
+                System.out.println("--> " + subtask);
+            }
+        }
+        System.out.println("Подзадачи:");
+        for (Subtask subtask : manager.getAllSubtasks()) {
+            System.out.println(subtask);
+        }
+
+        System.out.println("История:");
+        for (Task task : manager.getHistoryManager().getHistory()) {
+            System.out.println(task);
+        }
     }
 }
+
+

@@ -13,6 +13,11 @@ public class Subtask extends Task {
         this.epicId = epicId;
     }
 
+    public Subtask(Integer epicId, Integer id, String name, String description, Status status) {
+        super(id, name, description, Status.NEW);
+        this.epicId = epicId;
+    }
+
     public Integer getEpicId() {
         return epicId;
     }
