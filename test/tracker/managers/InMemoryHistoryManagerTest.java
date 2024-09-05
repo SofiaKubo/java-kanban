@@ -1,4 +1,4 @@
-package tracker.manager;
+package tracker.managers;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +41,7 @@ class InMemoryHistoryManagerTest {
         final List<Task> history = historyManager.getHistory();
 
         // check
-        Assertions.assertEquals(10, history.size(), "History is not empty");
+        Assertions.assertEquals(1, history.size(), "History is not empty");
         Assertions.assertEquals("Task 6", history.get(0).getName(), "First task should be Task 6");
         Assertions.assertEquals("Task 15", history.get(9).getName(), "Last task should be Task 15");
     }

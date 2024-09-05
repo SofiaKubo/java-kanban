@@ -1,4 +1,4 @@
-package tracker.manager;
+package tracker.managers;
 
 import tracker.models.Epic;
 import tracker.models.Status;
@@ -70,6 +70,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteTaskById(int id) {
         if (tasks.containsKey(id)) {
             tasks.remove(id);
+            historyManager.remove(id);
         } else {
             System.out.println("Задача отсутствует");
         }
@@ -77,7 +78,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTasks() {
+        List<Integer> taskIds = new ArrayList<>(tasks.keySet());
         tasks.clear();
+        for (Integer taskId : taskIds) {
+            historyManager.remove(taskId);
+        }
     }
 
     // *********** методы для взаимодействия с Эпиками ***********
@@ -158,8 +163,10 @@ public class InMemoryTaskManager implements TaskManager {
             Epic deletedEpic = epics.get(id);
             for (Integer subtaskId : deletedEpic.getSubtasksId()) {
                 subtasks.remove(subtaskId);
+                historyManager.remove(subtaskId);
             }
             epics.remove(id);
+            historyManager.remove(id);
         } else {
             System.out.println("Эпик отсутствует");
         }
@@ -167,8 +174,22 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllEpics() {
+        List<Integer> epicIds = new ArrayList<>(epics.keySet());
+        List<Integer> subtaskIds = new ArrayList<>();
+        for (Integer epicId : epicIds) {
+            Epic epic = epics.get(epicId);
+            if (epic != null) {
+                subtaskIds.addAll(epic.getSubtasksId());
+            }
+        }
         epics.clear();
         subtasks.clear();
+        for (Integer epicId : epicIds) {
+            historyManager.remove(epicId);
+        }
+        for (Integer subtaskId : subtaskIds) {
+            historyManager.remove(subtaskId);
+        }
     }
 
     // *********** методы для взаимодействия с подзадачами ***********
@@ -249,11 +270,16 @@ public class InMemoryTaskManager implements TaskManager {
         }
         Epic epic = epics.get(subtask.getEpicId());
         epic.deleteSubtaskId(id);
+        historyManager.remove(id);
         updateEpicStatus(epic.getId());
     }
 
     @Override
     public void deleteAllSubtasks() {
+        List<Integer> subtaskIds = new ArrayList<>(subtasks.keySet());
+        for (Integer subtaskId : subtaskIds) {
+            historyManager.remove(subtaskId);
+        }
         subtasks.clear();
         for (Epic epic : epics.values()) {
             epic.clearSubtaskIds();

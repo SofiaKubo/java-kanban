@@ -1,5 +1,5 @@
-import tracker.manager.Managers;
-import tracker.manager.TaskManager;
+import tracker.managers.Managers;
+import tracker.managers.TaskManager;
 import tracker.models.Epic;
 import tracker.models.Status;
 import tracker.models.Subtask;
@@ -38,13 +38,37 @@ public class Main {
         updatedSubTaskTwo.setId(subTaskTwoOfEpicOne.getId());
         taskManager.updateSubtask(updatedSubTaskTwo);
 
-        System.out.println(taskManager.getEpicById(epicOne.getId()));
+        /*taskManager.deleteTaskById(taskOne.getId());
+        System.out.println(taskManager.getAllTasks());*/
+
+       /* taskManager.deleteEpicById(epicTwo.getId());
+        System.out.println(taskManager.getAllEpics());
+*/
+        taskManager.getTaskById(taskOne.getId());
+        taskManager.getEpicById(epicOne.getId());
+        taskManager.getSubtaskById(subTaskOneOfEpicOne.getId());
+        System.out.println("История:");
+        for (Task task : taskManager.getHistory()) {
+            System.out.println(task);
+        }
+        taskManager.getEpicById(epicOne.getId());
+        taskManager.getSubtaskById(subTaskOneOfEpicOne.getId());
+        taskManager.getTaskById(taskOne.getId());
+        System.out.println("История:");
+        for (Task task : taskManager.getHistory()) {
+            System.out.println(task);
+        }
 
         taskManager.deleteTaskById(taskOne.getId());
-        System.out.println(taskManager.getAllTasks());
-
-        taskManager.deleteEpicById(epicTwo.getId());
-        System.out.println(taskManager.getAllEpics());
+        System.out.println("История:");
+        for (Task task : taskManager.getHistory()) {
+            System.out.println(task);
+        }
+        taskManager.deleteEpicById(epicOne.getId());
+        System.out.println("История:");
+        for (Task task : taskManager.getHistory()) {
+            System.out.println(task);
+        }
 
         printAllTasks(taskManager);
         taskManager.getHistory();
