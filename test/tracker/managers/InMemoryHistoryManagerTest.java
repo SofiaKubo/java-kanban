@@ -10,10 +10,12 @@ import java.util.List;
 
 class InMemoryHistoryManagerTest {
     private HistoryManager historyManager;
+    private TaskManager taskManager;
 
     @BeforeEach
     void init() {
         historyManager = Managers.getDefaultHistory();
+        taskManager = Managers.getDefault();
     }
 
     @Test
@@ -31,18 +33,47 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void shouldGetHistory() {
+    void shouldAddNewTaskAtTheEndOfHistoryList() {
         // prepare
-        for (int i = 1; i <= 15; i++) {
-            Task task = new Task("Task " + i, "Description " + i);
-            historyManager.add(task);
-        }
+        Task taskOne = new Task("Task one", "Do something", Status.NEW);
+        Task taskTwo = new Task("Task two", "Do something else", Status.NEW);
+
         // do
+        historyManager.add(taskOne);
+        historyManager.add(taskTwo);
         final List<Task> history = historyManager.getHistory();
 
         // check
-        Assertions.assertEquals(1, history.size(), "History is not empty");
-        Assertions.assertEquals("Task 6", history.get(0).getName(), "First task should be Task 6");
-        Assertions.assertEquals("Task 15", history.get(9).getName(), "Last task should be Task 15");
+        Assertions.assertEquals(taskTwo, history.get(history.size() - 1), "Task is the last in the history");
+    }
+
+    @Test
+    void shouldAddTheSameTaskJustOneTimeAtHistoryList() {
+        // prepare
+        Task taskOne = new Task("Task one", "Do something", Status.NEW);
+
+        // do
+        historyManager.add(taskOne);
+        historyManager.add(taskOne);
+        historyManager.add(taskOne);
+        final List<Task> history = historyManager.getHistory();
+
+        // check
+        Assertions.assertEquals(1, history.size(), "Task wasn't duplicated in the history");
+    }
+
+    @Test
+    void whenTaskHasDeletedShouldDeleteItFromHistoryList() {
+        // prepare
+        Task taskOne = new Task("Task one", "Do something", Status.NEW);
+        taskManager.addNewTask(taskOne); // Устанавливаем ID вручную или используем taskManager.addNewTask(taskOne)
+        taskManager.getTaskById(taskOne.getId());
+
+        // do
+        taskManager.deleteTaskById(taskOne.getId());
+        final List<Task> history = historyManager.getHistory();
+
+        // check
+        Assertions.assertEquals(0, history.size(), "Task wasn't removed from the history");
     }
 }
