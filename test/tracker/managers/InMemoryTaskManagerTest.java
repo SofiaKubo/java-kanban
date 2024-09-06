@@ -426,4 +426,104 @@ class InMemoryTaskManagerTest {
         Assertions.assertNotNull(subtasks, "List should not be null");
         Assertions.assertTrue(subtasks.isEmpty(), "List should be empty");
     }
+
+    @Test
+    void deletedSubtasksShouldNotKeepOldId() {
+        // prepare
+        taskManager.addNewEpic(epic);
+        Subtask subtask = new Subtask(epic.getId(), "Subtask one", "Do something");
+        Subtask addedSubtask = taskManager.addNewSubtask(subtask);
+
+        // do
+        int subtaskId = addedSubtask.getId();
+        taskManager.deleteSubtaskById(subtaskId);
+        Subtask deletedSubtask = taskManager.getSubtaskById(subtaskId);
+
+        // check
+        Assertions.assertNull(deletedSubtask, "Deleted subtask should not keep old ID");
+    }
+
+    @Test
+    void epicShouldNotContainDeletedSubtaskId() {
+        // prepare
+        taskManager.addNewEpic(epic);
+        Subtask subtaskOne = new Subtask(epic.getId(), "Subtask one", "Do something");
+        Subtask subtaskTwo = new Subtask(epic.getId(), "Subtask two", "Do something else");
+
+        Subtask addedSubtaskOne = taskManager.addNewSubtask(subtaskOne);
+        Subtask addedSubtaskTwo = taskManager.addNewSubtask(subtaskTwo);
+
+        // do
+        int subtaskTwoId = addedSubtaskTwo.getId();
+        taskManager.deleteSubtaskById(subtaskTwoId);
+        Epic updatedEpic = taskManager.getEpicById(epic.getId());
+        List<Integer> subtaskIds = updatedEpic.getSubtasksId();
+
+        // check
+        Assertions.assertFalse(subtaskIds.contains(subtaskTwoId), "Epic should not contain the ID of the deleted subtask");
+    }
+
+    @Test
+    void shouldMatchWithChangesInTaskAfterUsingSetters() {
+        // prepare
+        Task addedTask = taskManager.addNewTask(task);
+
+        // do
+        addedTask.setName("New name");
+        addedTask.setDescription("New description");
+        addedTask.setStatus(Status.DONE);
+        taskManager.updateTask(addedTask);
+        Task updatedTask = taskManager.getTaskById(addedTask.getId());
+
+        // check
+        Assertions.assertEquals("New name", updatedTask.getName());
+        Assertions.assertEquals("New description", updatedTask.getDescription());
+        Assertions.assertEquals(Status.DONE, updatedTask.getStatus());
+    }
+
+    @Test
+    void shouldMatchWithChangesInEpicAfterUsingSetters() {
+        // prepare
+        Epic addedEpic = taskManager.addNewEpic(epic);
+        Subtask subtaskOne = new Subtask(epic.getId(), "Subtask one", "Do something");
+        Subtask subtaskTwo = new Subtask(epic.getId(), "Subtask two", "Do something else");
+
+        taskManager.addNewSubtask(subtaskOne);
+        taskManager.addNewSubtask(subtaskTwo);
+
+        // do
+        addedEpic.setName("New name");
+        addedEpic.setDescription("New description");
+        taskManager.updateEpic(addedEpic);
+        Epic updatedEpic = taskManager.getEpicById(addedEpic.getId());
+
+        // check
+        Assertions.assertEquals("New name", addedEpic.getName());
+        Assertions.assertEquals("New description", addedEpic.getDescription());
+        Assertions.assertEquals(2, updatedEpic.getSubtasksId().size());
+        Assertions.assertTrue(updatedEpic.getSubtasksId().contains(subtaskOne.getId()));
+        Assertions.assertTrue(updatedEpic.getSubtasksId().contains(subtaskTwo.getId()));
+    }
+
+    @Test
+    void shouldMatchWithChangesInSubtaskAfterUsingSetters() {
+        // prepare
+        Epic epic = new Epic("Epic one", "Do something");
+        Epic addedEpic = taskManager.addNewEpic(epic);
+        Subtask subtask = new Subtask(addedEpic.getId(), "Subtask", "Do something", Status.NEW);
+
+        Subtask addedSubtask = taskManager.addNewSubtask(subtask);
+
+        // do
+        addedSubtask.setName("New name");
+        addedSubtask.setDescription("New description");
+        addedSubtask.setStatus(Status.DONE);
+        taskManager.updateSubtask(addedSubtask);
+        Subtask updatedSubtask = taskManager.getSubtaskById(addedSubtask.getId());
+
+        // check
+        Assertions.assertEquals("New name", updatedSubtask.getName());
+        Assertions.assertEquals("New description", updatedSubtask.getDescription());
+        Assertions.assertEquals(Status.DONE, updatedSubtask.getStatus());
+    }
 }
