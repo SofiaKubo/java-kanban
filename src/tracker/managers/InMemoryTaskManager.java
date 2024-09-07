@@ -78,11 +78,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTasks() {
-        List<Integer> removedTaskIds = new ArrayList<>(tasks.keySet());
-        tasks.clear();
-        for (Integer taskId : removedTaskIds) {
+        for (Integer taskId : tasks.keySet()) {
             historyManager.remove(taskId);
         }
+        tasks.clear();
     }
 
     // *********** методы для взаимодействия с Эпиками ***********
@@ -174,22 +173,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllEpics() {
-        List<Integer> removedEpicIds = new ArrayList<>(epics.keySet());
-        List<Integer> removedSubtaskIds = new ArrayList<>();
-        for (Integer epicId : removedEpicIds) {
-            Epic epic = epics.get(epicId);
-            if (epic != null) {
-                removedSubtaskIds.addAll(epic.getSubtasksId());
-            }
+        for (Subtask subtask : subtasks.values()) {
+            historyManager.remove(subtask.getId());
+        }
+        for (Integer epicId : epics.keySet()) {
+            historyManager.remove(epicId);
         }
         epics.clear();
         subtasks.clear();
-        for (Integer epicId : removedEpicIds) {
-            historyManager.remove(epicId);
-        }
-        for (Integer subtaskId : removedSubtaskIds) {
-            historyManager.remove(subtaskId);
-        }
     }
 
     // *********** методы для взаимодействия с подзадачами ***********
@@ -276,8 +267,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllSubtasks() {
-        List<Integer> removedSubtaskIds = new ArrayList<>(subtasks.keySet());
-        for (Integer subtaskId : removedSubtaskIds) {
+        for (Integer subtaskId : subtasks.keySet()) {
             historyManager.remove(subtaskId);
         }
         subtasks.clear();
