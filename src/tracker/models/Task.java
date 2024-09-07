@@ -1,4 +1,5 @@
 package tracker.models;
+
 import java.util.Objects;
 
 public class Task {
