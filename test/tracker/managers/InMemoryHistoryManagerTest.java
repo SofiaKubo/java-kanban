@@ -66,7 +66,7 @@ class InMemoryHistoryManagerTest {
     void whenTaskHasDeletedShouldDeleteItFromHistoryList() {
         // prepare
         Task taskOne = new Task("Task one", "Do something", Status.NEW);
-        taskManager.addNewTask(taskOne); // Устанавливаем ID вручную или используем taskManager.addNewTask(taskOne)
+        taskManager.addNewTask(taskOne);
         taskManager.getTaskById(taskOne.getId());
 
         // do
