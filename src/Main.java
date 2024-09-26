@@ -8,21 +8,21 @@ import tracker.models.Task;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Поехали!");
+        System.out.println("Let's go!");
 
         TaskManager taskManager = Managers.getDefault();
-        Task taskOne = taskManager.addNewTask(new Task("Задача 1", "Помыть пол во всех комнатах"));
-        Task taskTwo = taskManager.addNewTask(new Task("Задача 2", "Купить продукты к ужину"));
+        Task taskOne = taskManager.addNewTask(new Task("Task 1", "Clean the floors in all rooms"));
+        Task taskTwo = taskManager.addNewTask(new Task("Task 2", "Buy groceries for dinner"));
 
-        Epic epicOne = taskManager.addNewEpic(new Epic("Эпик 1", "Переезд"));
-        Epic epicTwo = taskManager.addNewEpic(new Epic("Эпик 2", "Подготовка к экзамену"));
+        Epic epicOne = taskManager.addNewEpic(new Epic("Epic 1", "Moving"));
+        Epic epicTwo = taskManager.addNewEpic(new Epic("Epic 2", "Exam preparation"));
 
-        Subtask subTaskOneOfEpicOne = taskManager.addNewSubtask(new Subtask(epicOne.getId(), "Подзадача 1 к Эпику 1",
-                "Заказать перевозку вещей", Status.NEW));
-        Subtask subTaskTwoOfEpicOne = taskManager.addNewSubtask(new Subtask(epicOne.getId(), "Подзадача 2 к Эпику 1",
-                "Сделать уборку в старой квартире", Status.NEW));
-        Subtask subTaskThreeOfEpicOne = taskManager.addNewSubtask(new Subtask(epicOne.getId(), "Подзадача 3 к Эпику 1",
-                "Повторить формулы", Status.NEW));
+        Subtask subTaskOneOfEpicOne = taskManager.addNewSubtask(new Subtask(epicOne.getId(), "Subtask 1 of Epic 1",
+                "Order the transportation of items", Status.NEW));
+        Subtask subTaskTwoOfEpicOne = taskManager.addNewSubtask(new Subtask(epicOne.getId(), "Subtask 2 of Epic 1",
+                "Clean up the previous apartment", Status.NEW));
+        Subtask subTaskThreeOfEpicOne = taskManager.addNewSubtask(new Subtask(epicOne.getId(), "Subtask 3 of Epic 1",
+                "Return the apartment keys", Status.NEW));
 
         taskManager.getTaskById(taskOne.getId());
         taskManager.getTaskById(taskTwo.getId());
@@ -52,7 +52,7 @@ public class Main {
     }
 
     public static void printHistory(TaskManager manager) {
-        System.out.println("История:");
+        System.out.println("History:");
         for (Task task : manager.getHistory()) {
             System.out.println(task);
         }

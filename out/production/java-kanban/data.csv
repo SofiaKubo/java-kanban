@@ -1,0 +1,8 @@
+ID,TYPE,NAME,DESCRIPTION,STATUS,EPICID
+1,TASK,Задача 1,Clean the floors in all rooms,NEW,
+2,TASK,Задача 2,Buy groceries for dinner,NEW,
+3,EPIC,Epic 1,Moving,NEW,
+4,EPIC,Epic 2,Exam preparation,NEW,
+5,SUBTASK,Subtask 1 of Epic 1,Order the transportation of items,NEW,3
+6,SUBTASK,Subtask 2 of Epic 1,Clean up the previous apartment,NEW,3
+7,SUBTASK,Subtask 3 of Epic 1,Return the apartment keys,NEW,3

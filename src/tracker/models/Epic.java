@@ -23,9 +23,11 @@ public class Epic extends Task {
 
     public Epic(String name, String description) {
         super(name, description, Status.NEW);
+        this.setType(Type.EPIC);
     }
 
     public Epic(Integer id, String name, String description, Status status) {
         super(id, name, description, Status.NEW);
+        this.setType(Type.EPIC);
     }
 }

@@ -44,7 +44,8 @@ class InMemoryHistoryManagerTest {
         final List<Task> history = historyManager.getHistory();
 
         // check
-        Assertions.assertEquals(taskTwo, history.get(history.size() - 1), "Task is the last in the history");
+        Assertions.assertEquals(taskTwo, history.get(
+                history.size() - 1), "Task is the last in the history");
     }
 
     @Test
