@@ -7,24 +7,52 @@ public class Task {
     private String name;
     private Status status;
     private String description;
+    private Type type;
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public Task(Integer id, String name, String description, Status status, Type type) {
+        this.name = name;
+        this.status = status;
+        this.id = id;
+        this.description = description;
+        this.type = type;
+    }
+
+    public Type getType() {
+        return type;
+    }
 
     public Task(Integer id, String name, String description, Status status) {
         this.name = name;
         this.status = status;
         this.id = id;
         this.description = description;
+        this.type = Type.TASK;
     }
 
     public Task(String name, String description, Status status) {
         this.name = name;
         this.description = description;
         this.status = status;
+        this.type = Type.TASK;
+    }
+
+    public Task(String name, String description, Status status, Type type) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.type = Type.TASK;
     }
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.status = Status.NEW;
+        this.type = Type.TASK;
+
     }
 
     public Integer getId() {
@@ -74,7 +102,8 @@ public class Task {
 
     @Override
     public String toString() {
-        return " id = '" + id + '\'' + ", name = '" + name + '\'' +
+        return " id = '" + id + '\'' + " type = '" + type + '\'' +
+                ", name = '" + name + '\'' +
                 ", status = '" + status + '\'' +
                 ", description = '" + description + '\'';
     }

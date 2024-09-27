@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final Map<Integer, Task> tasks = new HashMap<>();
-    private final Map<Integer, Epic> epics = new HashMap<>();
-    private final Map<Integer, Subtask> subtasks = new HashMap<>();
+    protected final Map<Integer, Task> tasks = new HashMap<>();
+    protected final Map<Integer, Epic> epics = new HashMap<>();
+    protected final Map<Integer, Subtask> subtasks = new HashMap<>();
 
     private HistoryManager historyManager;
 
@@ -25,6 +25,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     private int generateNewId() {
         return id++;
+    }
+
+    protected void setId(int id) {
+        this.id = id;
     }
 
     // *********** методы для взаимодействия с Задачами ***********
@@ -86,7 +90,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     // *********** методы для взаимодействия с Эпиками ***********
 
-    private void updateEpicStatus(int epicId) {
+    protected void updateEpicStatus(int epicId) {
         Epic updatedEpic = epics.get(epicId);
 
         int counterNew = 0;
@@ -203,8 +207,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Subtask updateSubtask(Subtask subtask) {
-        Subtask existingSubtask = subtasks.get(subtask.getId());
+    public Subtask updateSubtask(Subtask updatedSubtask) {
+        Subtask existingSubtask = subtasks.get(updatedSubtask.getId());
         if (existingSubtask == null) {
             System.out.println("Subtask not found");
             return null;
@@ -214,13 +218,13 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("Epic not found");
             return null;
         }
-        if (!existingSubtask.getEpicId().equals(subtask.getEpicId())) {
+        if (!existingSubtask.getEpicId().equals(updatedSubtask.getEpicId())) {
             System.out.println("Can't change the EpicId of the subtask");
             return null;
         }
-        subtasks.put(subtask.getId(), subtask);
+        subtasks.put(updatedSubtask.getId(), updatedSubtask);
         updateEpicStatus(epic.getId());
-        return subtask;
+        return updatedSubtask;
     }
 
     @Override
