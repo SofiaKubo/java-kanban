@@ -101,7 +101,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
-    public void save() {
+    private void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
             List<Task> allTasks = getAllTasks();
             List<Epic> allEpics = getAllEpics();
@@ -134,7 +134,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String title = br.readLine();
+            br.readLine();
 
             String line;
             int maxId = 0;
@@ -149,13 +149,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
                 switch (type) {
                     case EPIC:
-                        taskManager.addNewEpic((Epic) task);
+                        taskManager.putEpic((Epic) task);
                         break;
                     case SUBTASK:
-                        taskManager.addNewSubtask((Subtask) task);
+                        taskManager.putSubtask((Subtask) task);
                         break;
                     case TASK:
-                        taskManager.addNewTask(task);
+                        taskManager.putTask(task);
                         break;
                     default:
                         throw new IllegalArgumentException(
@@ -170,7 +170,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    public String toCSV(Task task) {
+    private String toCSV(Task task) {
         if (task instanceof Subtask) {
             Subtask subtask = (Subtask) task;
             return String.format("%s,%s,%s,%s,%s,%s", task.getId(), task.getType(), task.getName(), task.getDescription(), task.getStatus(), subtask.getEpicId());
@@ -179,7 +179,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    public static Task fromString(String line) {
+    private static Task fromString(String line) {
         String[] contents = line.split(",");
         int id;
         int epicId = -1;
@@ -216,8 +216,26 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    public void restoreId(int maxId) {
+    private void restoreId(int maxId) {
         setId(maxId);
+    }
+
+    private void putTask(Task task) {
+        tasks.put(task.getId(), task);
+    }
+
+    private void putEpic(Epic epic) {
+        epics.put(epic.getId(), epic);
+        updateEpicStatus(epic.getId());
+    }
+
+    private void putSubtask(Subtask subtask) {
+        subtasks.put(subtask.getId(), subtask);
+        Epic relatedEpic = epics.get(subtask.getEpicId());
+        if (relatedEpic != null) {
+            relatedEpic.addSubtaskIds(subtask.getId());
+            updateEpicStatus(subtask.getEpicId());
+        }
     }
 
     public static void main(String[] args) {
@@ -229,7 +247,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         // File existence test
         if (file.exists()) {
             // If file exists, load the data
-            taskManager = Managers.getFileBackedTaskManager(file);
+            taskManager = loadFromFile(file);
             System.out.println("Data loaded from " + file.getName());
         } else {
             // If file doesn't exist, create new manager

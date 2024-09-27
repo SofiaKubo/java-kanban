@@ -46,7 +46,6 @@ class FileBackedTaskManagerTest extends AbstractTaskManagerTest<FileBackedTaskMa
         FileBackedTaskManager managerEmpty = createTaskManager();
 
         // do
-        managerEmpty.save();
         FileBackedTaskManager loadedManager = Managers.getFileBackedTaskManager(tempFile);
 
         // check
@@ -72,7 +71,6 @@ class FileBackedTaskManagerTest extends AbstractTaskManagerTest<FileBackedTaskMa
         manager.addNewSubtask(subtaskOne);
 
         // do
-        manager.save();
         TaskManager loadedManager = loadFromFile(tempFile);
 
         List<Task> loadedTasks = loadedManager.getAllTasks();
@@ -99,7 +97,6 @@ class FileBackedTaskManagerTest extends AbstractTaskManagerTest<FileBackedTaskMa
 
         // do
         manager.deleteTaskById(task.getId());
-        manager.save();
 
         // check
         TaskManager loadedManager = loadFromFile(tempFile);

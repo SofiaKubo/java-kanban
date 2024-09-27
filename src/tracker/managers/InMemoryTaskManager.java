@@ -27,7 +27,7 @@ public class InMemoryTaskManager implements TaskManager {
         return id++;
     }
 
-    public void setId(int id) {
+    protected void setId(int id) {
         this.id = id;
     }
 
@@ -90,7 +90,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     // *********** методы для взаимодействия с Эпиками ***********
 
-    private void updateEpicStatus(int epicId) {
+    protected void updateEpicStatus(int epicId) {
         Epic updatedEpic = epics.get(epicId);
 
         int counterNew = 0;
